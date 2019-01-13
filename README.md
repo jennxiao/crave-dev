@@ -4,8 +4,8 @@ This is the developmental timeline for the 8-week Codeology Project, Crave. Crav
 ## ✨Week 1✨
 Backend: Created basic chatbot using NLTK. 
 
-## Week 2
+## 🔥Week 2🔥
 Backend: Built another chatbot using the Yelp API and dependency tree parser using spaCy.
 
-## Week 3
+## 🎉Week 3🎉
 Backend: Working on entity recognizer and intent classifer using NLTK.
