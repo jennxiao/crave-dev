@@ -1,0 +1,125 @@
+import nltk
+from nltk.stem.lancaster import LancasterStemmer
+# word stemmer
+stemmer = LancasterStemmer()
+
+# 3 classes of training data
+training_data = []
+training_data.append({"class":"greeting", "sentence":"Hello."})
+training_data.append({"class":"greeting", "sentence":"Hi there."})
+training_data.append({"class":"greeting", "sentence":"Hi hi."})
+training_data.append({"class":"greeting", "sentence":"Howdy."})
+
+training_data.append({"class":"breakfast", "sentence":"i want breakfast"})
+training_data.append({"class":"breakfast", "sentence":"it's morning and i'm hungry"})
+training_data.append({"class":"breakfast", "sentence":"breakfast please!"})
+training_data.append({"class":"breakfast", "sentence":"looking for breakfast food!"})
+training_data.append({"class":"breakfast", "sentence":"BREAKFAST!"})
+training_data.append({"class":"breakfast", "sentence":"the first meal of the day!"})
+training_data.append({"class":"breakfast", "sentence":"Morning food!"})
+
+training_data.append({"class":"sandwich", "sentence":"i'm looking for sandwichs"})
+training_data.append({"class":"sandwich", "sentence":"can you make a sandwich?"})
+training_data.append({"class":"sandwich", "sentence":"having a sandwich today!"})
+training_data.append({"class":"sandwich", "sentence":"Mmmm sandwich."})
+training_data.append({"class":"sandwich", "sentence":"hungry for sandwich."})
+
+# capture unique stemmed words in the training corpus
+corpus_words = {}
+class_words = {}
+# turn a list into a set (of unique items) and then a list again (this removes duplicates)
+classes = list(set([a['class'] for a in training_data]))
+for c in classes:
+    # prepare a list of words within each class
+    class_words[c] = []
+
+# loop through each sentence in our training data
+for data in training_data:
+    # tokenize each sentence into words
+    for word in nltk.word_tokenize(data['sentence']):
+        # ignore a some things
+        if word not in ["?", "'s"]:
+            # stem and lowercase each word
+            stemmed_word = stemmer.stem(word.lower())
+            # have we not seen this word already?
+            if stemmed_word not in corpus_words:
+                corpus_words[stemmed_word] = 1
+            else:
+                corpus_words[stemmed_word] += 1
+
+            # add the word to our words in class list
+            class_words[data['class']].extend([stemmed_word])
+
+# we now have each stemmed word and the number of occurances of the word in our training corpus (the word's commonality)
+#print ("Corpus words and counts: %s \n" % corpus_words)
+# also we have all words in each class
+#print ("Class words: %s" % class_words)
+
+
+
+# calculate a score for a given class
+def calculate_class_score(sentence, class_name, show_details=True):
+    score = 0
+    # tokenize each word in our new sentence
+    for word in nltk.word_tokenize(sentence):
+        # check to see if the stem of the word is in any of our classes
+        if stemmer.stem(word.lower()) in class_words[class_name]:
+            # treat each word with same weight
+            score += 1
+            
+            if show_details:
+                print ("   match: %s" % stemmer.stem(word.lower() ))
+    return score
+
+
+# calculate a score for a given class
+def calculate_class_score(sentence, class_name, show_details=True):
+    score = 0
+    # tokenize each word in our new sentence
+    for word in nltk.word_tokenize(sentence):
+        # check to see if the stem of the word is in any of our classes
+        if stemmer.stem(word.lower()) in class_words[class_name]:
+            # treat each word with same weight
+            score += 1
+            
+            if show_details:
+                print ("   match: %s" % stemmer.stem(word.lower() ))
+    return score
+
+def classify(sentence):
+    high_class = None
+    high_score = 0
+    # loop through our classes
+    hybrid_list = []
+    last_score = 0
+    for c in class_words.keys():
+       # print(c)
+        # calculate score of sentence for each class
+        score = calculate_class_score(sentence, c, show_details=False)
+      #  print(score)
+        #mantain hybrid list 
+        if high_class is not None and high_score != 0:
+           # print("In FUNCTION")
+            #print("score is " + str(score) + " and high score is " + str(high_score))
+            if abs(score - high_score) < 3:
+                #print("ADDING HYBRID")
+                hybrid_list.append(c)
+                last_score = score
+            if last_score != 0 and score > high_score and abs(score - last_score) > 3:
+               # print("RESETTING HYBRID")
+                hybrid_list = []
+           # print(hybrid_list)
+        # keep track of highest score 
+        if score > high_score:
+            high_class = c
+            high_score = score
+    hybrid_list.append(high_class)
+    if hybrid_list:
+        high_class = " ".join(hybrid_list)
+
+
+    return high_class, high_score
+
+print(classify("I want a sandwich."))
+print(classify("I'm hungry in the morning."))
+print(classify("I'm hungry for a sandwich in the morning."))

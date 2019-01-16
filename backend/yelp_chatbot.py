@@ -1,5 +1,6 @@
 import nltk, spacy, time
 from yelpapi import YelpAPI
+import pyrebase
 
 en_nlp = spacy.load('en')
 nlp = spacy.load('en_core_web_sm')
@@ -14,29 +15,26 @@ def run_chatbot():
     num_results = 0
     for rest in response["businesses"]:
         num_results+=1
-    #print("Processing request")
-    #time.sleep(2)
+    final_list = []
     print(str(num_results) + " responses")
     for rest in response["businesses"]:
         if not rest['is_closed']:
-            print("{0}: {1}, {2}, {3}, {4} : {5} m away".format(rest["name"], rest["location"]["address1"], rest["location"]["city"], rest["location"]["state"], rest["location"]["zip_code"],  rest["distance"]))
-    time.sleep(2)
+            loc = "{0}: {1}, {2}, {3}, {4} : {5} m away".format(rest["name"], rest["location"]["address1"], rest["location"]["city"], rest["location"]["state"], rest["location"]["zip_code"],  rest["distance"])
+            print(loc)
+            final_list.append(loc)
+   # time.sleep(2)
     while True: 
-        user_response = input("CRAVEBOT: Not Satisfied with the results? Let me know by saying yes or no. \n")
+        user_response = input("CRAVEBOT: Satisfied with the results? Let me know by saying yes or no. \n")
         if user_response == "yes":
             break
         elif user_response == "no":
             user_response = input("CRAVEBOT: What's wrong? :( \n")
             #fix this
             print("will implement features later")
-            break;
+            break
         else:
             print("Sorry I don't understand.")
-    print("")
-
-def process_text(user_response):
-    user_response = user_response.lower()
-
+    print("Goodbye!")
 
 def process_food(user_response):
     doc = en_nlp(user_response)
@@ -52,60 +50,14 @@ def process_location(user_response):
         return word
 
 
-"""
-def process_food(user_response):
-    for res in user_response:
-        doc = nlp(res)
-        relations = extract_object_relations(doc)
-        for r1, r2 in relations:
-            print('{:<10}\t{}\t{}'.format(r1.text, r2.ent_type_, r2.text))
-"""
+config = {
+      "apiKey": "AAAAg6ZkqSE:APA91bG-sJbCTq64P9yXH4CzTSDCL_Y8K_hCsOoz3siPzIAnA9qpwzJHD3VEHp2W5yzyKvrLU4fQ_kErdwOr2TpXrUgDBJ-9flvh4kvGM9e3WydrjKXUL23Vcd_IakBwub9saapZBu1c",
+      "authDomain": "crave-dev-1ee56.firebaseapp.com",
+      "databaseURL": "https://crave-dev.firebaseio.com",
+      "storageBucket": "crave-dev-1ee56.appspot.com"
+    }
+firebase = pyrebase.initialize_app(config)
 
-"""
-def process_location(user_response):
-     for res in user_response:
-        doc = nlp(res)
-        relations = extract_location_relations(doc)
-        print("finished relations")
-        print(relations)
-        for r1, r2 in relations:
-            print('{:<10}\t{}\t{}'.format(r1.text, r2.ent_type_, r2.text))
-
-"""
-"""
-def extract_object_relations(doc):
-    spans = list(doc.ents) + list(doc.noun_chunks)
-    for span in spans:
-        span.merge()
-
-    relations = []
-    for product in filter(lambda w: w.ent_type_ == 'PRODUCT', doc):
-        if prduct.dep_ in ('attr', 'dobj'):
-            subject = [w for w in product.head.lefts if w.dep_ == 'nsubj']
-            if subject:
-                subject = subject[0]
-                relations.append((subject, product))
-        elif product.dep_ == 'pobj' and product.head.dep_ == 'prep':
-            relations.append((product.head.head, product))
-    return relations
-"""
-'''
-def extract_location_relations(doc):
-    spans = list(doc.ents) + list(doc.noun_chunks)
-    for span in spans:
-        span.merge()
-
-    relations = []
-    for product in filter(lambda w: w.ent_type_ == 'GPE', doc):
-        if prduct.dep_ in ('attr', 'dobj'):
-            subject = [w for w in product.head.lefts if w.dep_ == 'nsubj']
-            if subject:
-                subject = subject[0]
-                relations.append((subject, product))
-        elif product.dep_ == 'pobj' and product.head.dep_ == 'prep':
-            relations.append((product.head.head, product))
-    return relations
-'''
 
     
 if __name__ == '__main__':
