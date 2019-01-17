@@ -1,6 +1,5 @@
 import nltk, spacy, time
 from yelpapi import YelpAPI
-import pyrebase
 
 en_nlp = spacy.load('en')
 nlp = spacy.load('en_core_web_sm')
@@ -49,7 +48,7 @@ def process_location(user_response):
     for word in sentence:
         return word
 
-
+'''
 config = {
       "apiKey": "AAAAg6ZkqSE:APA91bG-sJbCTq64P9yXH4CzTSDCL_Y8K_hCsOoz3siPzIAnA9qpwzJHD3VEHp2W5yzyKvrLU4fQ_kErdwOr2TpXrUgDBJ-9flvh4kvGM9e3WydrjKXUL23Vcd_IakBwub9saapZBu1c",
       "authDomain": "crave-dev-1ee56.firebaseapp.com",
@@ -57,6 +56,7 @@ config = {
       "storageBucket": "crave-dev-1ee56.appspot.com"
     }
 firebase = pyrebase.initialize_app(config)
+'''
 
 
     
