@@ -1,8 +1,9 @@
 import sqlite3 
 import json
 
-from flask import Flask
+from flask import Flask, request, jsonify
 
+app = Flask(__name__)
 
 '''Example
 @app.route('/api/get_messages', methods = ['POST'])
@@ -13,15 +14,21 @@ def get_messages():
     return jsonify({'error':'no user found'})
 '''
 
+@app.route('/api/get_messages', methods = ['POST'])
 def main():
-	@app.route('/api/get_messages', methods = ['POST'])
-	json = request.get_json()
+    json = request.get_json()
 	#store json in database
 	#if nothing, will change once i see the json format:
-		return jsonify({{'messages': "Hi. I'm Cravebot. <3 What are you craving today?"}})
-	else: 
-		return jsonify({{'messages': "Seems like your location settings are off. :( Would you mind giving the city you are located in? \n"}})
+    if json is None:
+        return flask.json.jsonify(messages =  "Hi. I'm Cravebot. <3 What are you craving today?")
+        return flask.json.jsonify({'messages': "Hi. I'm Cravebot. <3 What are you craving today?"})
+    else:
+        return jsonify({'messages': "Seems like your location settings are off. :( Would you mind giving the city you are located in? \n"})
 		#check_database()
+
+@app.route('/test', methods = ['GET'])
+def test():
+    return jsonify(message = "hello world")
 
 
 
