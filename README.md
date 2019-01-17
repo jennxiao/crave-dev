@@ -8,4 +8,7 @@ Backend: Created basic chatbot using NLTK.
 Backend: Built another chatbot using the Yelp API and dependency tree parser using spaCy.
 
 ## 🎉Week 3🎉
-Backend: Working on entity recognizer and intent classifer using NLTK.
+Backend: Worked on entity recognizer and intent classifer using NLTK.
+
+## 🎵Week 4🎵
+Both ends worked on sending requests between the frontend and backend using Flask.
