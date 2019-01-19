@@ -1,9 +1,10 @@
 import nltk, spacy, time
 from yelpapi import YelpAPI
+import secret
 
 en_nlp = spacy.load('en')
 nlp = spacy.load('en_core_web_sm')
-yelp_api = YelpAPI("Hp8pY32pxeXSNL8oAaQIRHT2cKs4A711Jn-5cJof-rSE1SicUkneft1NKY_gdHk8mJoCMVY7iZARi13lqYCgpz65MXqYwN6vBqYpAnBovBbxN45Vf-u0MNdjgMAvXHYx")
+yelp_api = YelpAPI(secret.yelp_key)
 
 def run_chatbot():
     user_response = input("CRAVEBOT: Hi. I'm Cravebot. <3 What are you craving today? \n")
@@ -47,17 +48,6 @@ def process_location(user_response):
     sentence = next(doc.sents)
     for word in sentence:
         return word
-
-'''
-config = {
-      "apiKey": "AAAAg6ZkqSE:APA91bG-sJbCTq64P9yXH4CzTSDCL_Y8K_hCsOoz3siPzIAnA9qpwzJHD3VEHp2W5yzyKvrLU4fQ_kErdwOr2TpXrUgDBJ-9flvh4kvGM9e3WydrjKXUL23Vcd_IakBwub9saapZBu1c",
-      "authDomain": "crave-dev-1ee56.firebaseapp.com",
-      "databaseURL": "https://crave-dev.firebaseio.com",
-      "storageBucket": "crave-dev-1ee56.appspot.com"
-    }
-firebase = pyrebase.initialize_app(config)
-'''
-
 
     
 if __name__ == '__main__':
